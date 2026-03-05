@@ -56,7 +56,7 @@ stages:
          source $HOME/google-cloud-sdk/path.bash.inc
          gcloud --version
 
-    - task: gcloud@0
+    - task: GCloud@0
       displayName: 'Authenticate to GCP'
       inputs:
         gcpServiceConnection: 'gcp-ado-pipeline'
