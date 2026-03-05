@@ -46,6 +46,9 @@ stages:
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
       inputs:
         terraformVersion: '1.14.3'
+    
+    - task: GoogleCloudSdkInstaller@0
+      displayName: 'Install GCloud SDK'
 
     - task: gcloud@0
       displayName: 'Authenticate to GCP'
