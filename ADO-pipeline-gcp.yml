@@ -35,3 +35,36 @@ stages:
         script: |
           checkov -d terraform
       displayName: 'Security Scan'
+
+- stage: Plan
+  jobs:
+  - job: Plan
+    steps:
+
+    - checkout: self
+
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
+      inputs:
+        terraformVersion: '1.14.3'
+
+    - task: gcloud@0
+      displayName: 'Authenticate to GCP'
+      inputs:
+        gcpServiceConnection: 'gcp-ado-pipeline'
+        command: 'info'
+
+    - task: Bash@3
+      displayName: Terraform Init & Plan
+      inputs:
+        targetType: 'inline'
+        script: |
+
+          cd terraform
+
+          export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_GHA_CREDS_PATH
+
+          terraform init \
+          -backend-config="bucket=$(gcs_bucket)" \
+          -backend-config="prefix=$(tfstate_prefix)"
+
+          terraform plan -out=tfplan
