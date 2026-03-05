@@ -1,5 +1,5 @@
 
-project_id = "my-gcp-project"
+project_id = "gcp-terraform-486311"
 
 region = "us-central1"
 
