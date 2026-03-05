@@ -56,11 +56,11 @@ stages:
          source $HOME/google-cloud-sdk/path.bash.inc
          gcloud --version
 
-    - task: GCloud@0
-      displayName: 'Authenticate to GCP'
-      inputs:
-        gcpServiceConnection: 'gcp-ado-pipeline'
-        command: 'info'
+    # - task: GCloud@0
+    #   displayName: 'Authenticate to GCP'
+    #   inputs:
+    #     gcpServiceConnection: 'gcp-ado-pipeline'
+    #     command: 'info'
 
     - task: Bash@3
       displayName: Terraform Init & Plan
