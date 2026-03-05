@@ -47,8 +47,14 @@ stages:
       inputs:
         terraformVersion: '1.14.3'
     
-    - task: GoogleCloudSdkInstaller@0
-      displayName: 'Install GCloud SDK'
+    - task: Bash@3
+      displayName: Install Google Cloud SDK
+      inputs:
+        targetType: inline
+        script: |
+         curl https://sdk.cloud.google.com | bash
+         source $HOME/google-cloud-sdk/path.bash.inc
+         gcloud --version
 
     - task: gcloud@0
       displayName: 'Authenticate to GCP'
