@@ -56,24 +56,24 @@ stages:
          source $HOME/google-cloud-sdk/path.bash.inc
          gcloud --version
 
-    - task: gcloud@0
-      displayName: 'Authenticate to GCP'
-      inputs:
-        gcpServiceConnection: 'gcp-ado-pipeline'
-        command: 'info'
+    # - task: gcloud@0
+    #   displayName: 'Authenticate to GCP'
+    #   inputs:
+    #     gcpServiceConnection: 'gcp-ado-pipeline'
+    #     command: 'info'
 
-    - task: Bash@3
-      displayName: Terraform Init & Plan
-      inputs:
-        targetType: 'inline'
-        script: |
+    # - task: Bash@3
+    #   displayName: Terraform Init & Plan
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: |
 
-          cd terraform
+    #       cd terraform
 
-          export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_GHA_CREDS_PATH
+    #       export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_GHA_CREDS_PATH
 
-          terraform init \
-          -backend-config="bucket=$(gcs_bucket)" \
-          -backend-config="prefix=$(tfstate_prefix)"
+    #       terraform init \
+    #       -backend-config="bucket=$(gcs_bucket)" \
+    #       -backend-config="prefix=$(tfstate_prefix)"
 
-          terraform plan -out=tfplan
+    #       terraform plan -out=tfplan
