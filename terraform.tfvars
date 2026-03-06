@@ -12,3 +12,5 @@ cluster_name = "ado-gke-cluster"
 node_count = 2
 
 machine_type = "e2-medium"
+
+bucket_name = "bucket-for-me"
