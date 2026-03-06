@@ -62,13 +62,14 @@ stages:
     #     gcpServiceConnection: 'gcp-ado-pipeline'
     #     command: 'info'
 
-    - task: TerraformCLI@1
-      displayName: 'Init'
-      inputs:
-        command: 'init'
+    # - task: TerraformCLI@1
+    #   displayName: 'Init'
+    #   inputs:
+    #     command: 'init'
+
 
     - task: Bash@3
-      displayName: 'Plan'
+      displayName: 'init & Plan'
       inputs:
         targetType: 'inline'
         script: |
