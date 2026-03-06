@@ -103,8 +103,6 @@ stages:
         script: |
 
          set -e
-
-         cd ADO-pipeline-gcp
     
          echo "Current directory:"
          pwd
