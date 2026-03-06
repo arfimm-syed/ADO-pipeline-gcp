@@ -47,14 +47,14 @@ stages:
       inputs:
         terraformVersion: '1.14.3'
     
-    - task: Bash@3
-      displayName: Install Google Cloud SDK
-      inputs:
-        targetType: inline
-        script: |
-         curl https://sdk.cloud.google.com | bash
-         source $HOME/google-cloud-sdk/path.bash.inc
-         gcloud --version
+    # - task: Bash@3
+    #   displayName: Install Google Cloud SDK
+    #   inputs:
+    #     targetType: inline
+    #     script: |
+    #      curl https://sdk.cloud.google.com | bash
+    #      source $HOME/google-cloud-sdk/path.bash.inc
+    #      gcloud --version
 
     # - task: GCloud@0
     #   displayName: 'Authenticate to GCP'
@@ -70,9 +70,11 @@ stages:
 
           cd terraform
 
+          echo '$(GCP_KEY)' > gcp-key.json
+
           export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_GHA_CREDS_PATH
 
-          terraform init \
+          terraform init -reconfigure \
           -backend-config="bucket=$(gcs_bucket)" \
           -backend-config="prefix=$(tfstate_prefix)"
 
