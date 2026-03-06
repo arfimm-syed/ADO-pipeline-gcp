@@ -87,6 +87,16 @@ stages:
     #       terraform plan -out=tfplan
 
     - task: Bash@3
+      displayName: 'Debug Repo Structure'
+      inputs:
+        targetType: inline
+        script: |
+         echo "Current directory:"
+         pwd
+         echo "List all files recursively:"
+         ls -R
+
+    - task: Bash@3
       displayName: 'Terraform Init Plan'
       inputs:
         targetType: 'inline'
