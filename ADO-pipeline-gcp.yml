@@ -66,7 +66,7 @@ stages:
          echo '$(GCP_SA_KEY)' > gcp-key.json
           export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp-key.json
 
-          terraform init
+          terraform init -reconfigure
           terraform plan -out=tfplan
 
     - publish: tfplan
