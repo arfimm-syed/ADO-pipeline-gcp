@@ -63,7 +63,7 @@ stages:
         targetType: 'inline'
         script: |
 
-         echo '$(GCP_SA_KEY)' > gcp-key.json
+         echo "$(GCP_SA_KEY)" > gcp-key.json
           export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp-key.json
 
           terraform init -reconfigure
