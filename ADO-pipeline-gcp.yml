@@ -110,7 +110,7 @@ stages:
          echo "Files in directory:"
          ls -la
 
-         echo "$(GCP_KEY)" > gcp-key.json
+         printf "%s" "$(GCP_KEY)" > gcp-key.json
          export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp-key.json
 
          terraform version
