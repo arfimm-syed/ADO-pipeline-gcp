@@ -9,7 +9,6 @@ pool:
 
 stages:
 - stage: Validate
-  displayName: 'Validation'
   jobs:
   - job: Validate
     steps:
@@ -37,6 +36,7 @@ stages:
       displayName: 'Security Scan'
 
 - stage: Plan
+  dependsOn: Validate
   jobs:
   - job: Plan
     steps:
@@ -46,45 +46,6 @@ stages:
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
       inputs:
         terraformVersion: '1.14.6'
-    
-    # - task: Bash@3
-    #   displayName: Install Google Cloud SDK
-    #   inputs:
-    #     targetType: inline
-    #     script: |
-    #      curl https://sdk.cloud.google.com | bash
-    #      source $HOME/google-cloud-sdk/path.bash.inc
-    #      gcloud --version
-
-    # - task: GCloud@0
-    #   displayName: 'Authenticate to GCP'
-    #   inputs:
-    #     gcpServiceConnection: 'gcp-ado-pipeline'
-    #     command: 'info'
-
-    # - task: TerraformCLI@1
-    #   displayName: 'Init'
-    #   inputs:
-    #     command: 'init'
-
-
-    # - task: Bash@3
-    #   displayName: 'init & Plan'
-    #   inputs:
-    #     targetType: 'inline'
-    #     script: |
-
-    #       cd terraform
-
-    #       echo '$(GCP_KEY)' > gcp-key.json
-
-    #       export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_GHA_CREDS_PATH
-
-    #       terraform init -reconfigure \
-    #       -backend-config="bucket=$(gcs_bucket)" \
-    #       -backend-config="prefix=$(tfstate_prefix)"
-
-    #       terraform plan -out=tfplan
 
     - task: Bash@3
       displayName: 'Debug Repo Structure'
@@ -102,24 +63,11 @@ stages:
         targetType: 'inline'
         script: |
 
-         set -e
-    
-         echo "Current directory:"
-         pwd
+         echo '$(GCP_SA_KEY)' > gcp-key.json
+          export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp-key.json
 
-         echo "Files in directory:"
-         ls -la
+          terraform init
+          terraform plan -out=tfplan
 
-         printf "%s" "$(GCP_KEY)" > gcp-key.json
-         export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp-key.json
-
-         terraform version
-
-         terraform init -reconfigure \
-         -backend-config="bucket=$(gcs_bucket)" \
-         -backend-config="prefix=$(tfstate_prefix)"
-
-         terraform fmt -check
-         terraform validate
-
-         terraform plan -out=tfplan
+    - publish: tfplan
+      artifact: terraform-plan

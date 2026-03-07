@@ -1,7 +1,7 @@
 
 terraform {
-    
-  backend "gcs" {
-    name = var.bucket_name
+   backend "gcs" {
+    bucket = "terraform-state-gcp-007"
+    prefix = "terraform/state"
   }
 }
