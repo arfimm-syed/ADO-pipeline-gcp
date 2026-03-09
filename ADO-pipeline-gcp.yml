@@ -1,5 +1,4 @@
-variables:
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+
 
 trigger:
 - main
@@ -13,6 +12,8 @@ stages:
   - job: Validate
     steps:
     - checkout: self
+      variables:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
       inputs:
