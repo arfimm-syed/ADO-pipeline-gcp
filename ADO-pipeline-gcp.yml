@@ -60,8 +60,9 @@ stages:
         secureFile: gcp-wif.json
 
     - script: |
-        export GOOGLE_APPLICATION_CREDENTIALS=$(gcpcred.secureFilePath)
-        gcloud auth list
+       echo "Exporting credentials"
+       export GOOGLE_APPLICATION_CREDENTIALS=$(gcpcred.secureFilePath)
+       gcloud auth list
       displayName: Test GCP Authentication
 
     # - task: Bash@3
