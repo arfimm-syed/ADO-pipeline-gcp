@@ -1,3 +1,6 @@
+variables:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+
 trigger:
 - main
 
