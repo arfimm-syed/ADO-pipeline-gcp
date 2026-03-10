@@ -42,20 +42,9 @@ stages:
 
     - checkout: self
       
-
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@1
       inputs:
         terraformVersion: '1.14.6'
-
-    # - task: Bash@3
-    #   displayName: 'Debug Repo Structure'
-    #   inputs:
-    #     targetType: inline
-    #     script: |
-    #      echo "Current directory:"
-    #      pwd
-    #      echo "List all files recursively:"
-    #      ls -R
 
     - task: DownloadSecureFile@1
       name: gcpcred
@@ -74,8 +63,7 @@ stages:
     #     targetType: 'inline'
     #     script: |
 
-    
-
+  
     #       terraform init -reconfigure
     #       terraform plan -out=tfplan
 
