@@ -50,11 +50,20 @@ stages:
       name: gcpcred
       inputs:
         secureFile: gcp-wif.json
+    
+    - bash: |
+        echo "Authenticating with service account"
 
-    - script: |
-       echo "Exporting credentials"
-       export GOOGLE_APPLICATION_CREDENTIALS=$(gcpcred.secureFilePath)
-       gcloud auth list
+        export GOOGLE_APPLICATION_CREDENTIALS=$(gcpcred.secureFilePath)
+       
+        gcloud auth activate-service-account \
+          --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+
+        echo "Authenticated accounts:"
+        gcloud auth list
+
+        echo "Current project:"
+        gcloud config set project project-4bdbeb16-1a29-411e-8bd
       displayName: Test GCP Authentication
 
     # - task: Bash@3
