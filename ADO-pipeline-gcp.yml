@@ -52,19 +52,21 @@ stages:
         secureFile: gcp-wif.json
     
     - bash: |
-        echo "Authenticating with service account"
+        echo "Requesting Azure DevOps OIDC token..."
+
+        curl -H "Authorization: Bearer $SYSTEM_ACCESSTOKEN" \
+        "$SYSTEM_OIDCTOKENURI" \
+        | jq -r '.value' > /tmp/oidc-token
 
         export GOOGLE_APPLICATION_CREDENTIALS=$(gcpcred.secureFilePath)
-       
-        gcloud auth activate-service-account \
-          --key-file=$GOOGLE_APPLICATION_CREDENTIALS
 
-        echo "Authenticated accounts:"
+        gcloud auth login --cred-file=$GOOGLE_APPLICATION_CREDENTIALS
+
         gcloud auth list
+      env:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+      displayName: Authenticate to GCP
 
-        echo "Current project:"
-        gcloud config set project project-4bdbeb16-1a29-411e-8bd
-      displayName: Test GCP Authentication
 
     # - task: Bash@3
     #   displayName: 'Terraform Init Plan'
