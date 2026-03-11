@@ -52,20 +52,29 @@ stages:
         secureFile: gcp-wif.json
     
     - bash: |
-        echo "Requesting Azure DevOps OIDC token..."
+       echo "Getting Azure DevOps OIDC token..."
 
-        curl -H "Authorization: Bearer $SYSTEM_ACCESSTOKEN" \
-        "$SYSTEM_OIDCTOKENURI" \
-        | jq -r '.value' > /tmp/oidc-token
+       OIDC_URL="https://vstoken.dev.azure.com/syedafzalsh/_apis/distributedtask/hubs/build/plans/${SYSTEM_PLANID}/jobs/${SYSTEM_JOBID}/oidctoken?api-version=7.1-preview.1"
 
-        export GOOGLE_APPLICATION_CREDENTIALS=$(gcpcred.secureFilePath)
+       curl -s \
+       -H "Authorization: Bearer $SYSTEM_ACCESSTOKEN" \
+       $OIDC_URL \
+       | jq -r '.oidcToken' > /tmp/oidc-token
 
-        gcloud auth login --cred-file=$GOOGLE_APPLICATION_CREDENTIALS
+       echo "Token saved to /tmp/oidc-token"
 
-        gcloud auth list
-      env:
-        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-      displayName: Authenticate to GCP
+       export GOOGLE_APPLICATION_CREDENTIALS=$(gcpcred.secureFilePath)
+
+       gcloud auth login --cred-file=$GOOGLE_APPLICATION_CREDENTIALS
+
+       gcloud auth list
+
+    env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+      SYSTEM_PLANID: $(System.PlanId)
+      SYSTEM_JOBID: $(System.JobId)
+
+    displayName: Authenticate to GCP
 
 
     # - task: Bash@3
