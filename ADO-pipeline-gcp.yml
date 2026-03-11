@@ -69,12 +69,12 @@ stages:
 
        gcloud auth list
 
-    env:
-      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-      SYSTEM_PLANID: $(System.PlanId)
-      SYSTEM_JOBID: $(System.JobId)
+      env:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+        SYSTEM_PLANID: $(System.PlanId)
+        SYSTEM_JOBID: $(System.JobId)
 
-    displayName: Authenticate to GCP
+      displayName: Authenticate to GCP
 
 
     # - task: Bash@3
