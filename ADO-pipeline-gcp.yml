@@ -77,15 +77,15 @@ stages:
       displayName: Authenticate to GCP
 
 
-    # - task: Bash@3
-    #   displayName: 'Terraform Init Plan'
-    #   inputs:
-    #     targetType: 'inline'
-    #     script: |
+    - task: Bash@3
+      displayName: 'Terraform Init Plan'
+      inputs:
+        targetType: 'inline'
+        script: |
 
   
-    #       terraform init -reconfigure
-    #       terraform plan -out=tfplan
+          terraform init -reconfigure
+          terraform plan -out=tfplan
 
-    # - publish: tfplan
-    #   artifact: terraform-plan
+    - publish: tfplan
+      artifact: terraform-plan
