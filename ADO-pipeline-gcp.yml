@@ -117,6 +117,9 @@ stages:
       #       terraform init -reconfigure
       # env:
       #   GOOGLE_APPLICATION_CREDENTIALS: $(GOOGLE_APPLICATION_CREDENTIALS)
+  
+    - download: current
+      artifact: terraform-plan
 
     - bash: |
        echo "Workspace structure:"
