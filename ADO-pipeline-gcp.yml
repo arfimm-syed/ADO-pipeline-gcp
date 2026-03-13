@@ -1,4 +1,18 @@
-
+#Validate
+#  ↓
+#Checkov Security Scan
+#  ↓
+#Terraform Init
+#  ↓
+#Terraform Plan (creates tfplan)
+#   ↓
+#Publish tfplan artifact
+#   ↓
+#Apply Stage
+#   ↓
+#Download artifact
+#   ↓
+#Terraform Apply
 
 trigger:
 - main
@@ -82,6 +96,11 @@ stages:
          terraform plan -out=tfplan
       env:
          GOOGLE_APPLICATION_CREDENTIALS: $(GOOGLE_APPLICATION_CREDENTIALS)
+
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: 'tfplan'
+        artifact: 'terraform-plan'
 
 - stage: Apply
   dependsOn: Plan
