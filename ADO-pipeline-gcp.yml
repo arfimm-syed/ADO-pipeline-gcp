@@ -118,11 +118,16 @@ stages:
       # env:
       #   GOOGLE_APPLICATION_CREDENTIALS: $(GOOGLE_APPLICATION_CREDENTIALS)
 
+    - bash: |
+       echo "Workspace structure:"
+       ls -R $(Pipeline.Workspace)
+      displayName: Debug Files
+
     - task: Bash@3
       displayName: Terraform Apply
       inputs:
         targetType: inline
         script: |
-          terraform apply -auto-approve terraform-plan/tfplan
+          terraform apply -auto-approve $(Pipeline.Workspace)/terraform-plan/tfplan
       env:
         GOOGLE_APPLICATION_CREDENTIALS: $(GOOGLE_APPLICATION_CREDENTIALS) 
