@@ -66,23 +66,13 @@ stages:
         secureFile: gcp-wif.json
 
     - bash: |
-        echo "Getting Azure DevOps OIDC token..."
-
-        OIDC_URL="https://vstoken.dev.azure.com/syedafzalsh/_apis/distributedtask/hubs/build/plans/${SYSTEM_PLANID}/jobs/${SYSTEM_JOBID}/oidctoken?api-version=7.1-preview.1"
-
-        curl -s \
-        -H "Authorization: Bearer $SYSTEM_ACCESSTOKEN" \
-        $OIDC_URL \
-        | jq -r '.oidcToken' > /tmp/oidc-token
-
-        echo "Token saved to /tmp/oidc-token"
-
+        echo "Setting GOOGLE_APPLICATION_CREDENTIALS"
         echo "##vso[task.setvariable variable=GOOGLE_APPLICATION_CREDENTIALS]$(gcpcred.secureFilePath)"
  
-      env:
-        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-        SYSTEM_PLANID: $(System.PlanId)
-        SYSTEM_JOBID: $(System.JobId)
+      # env:
+      #   SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+      #   SYSTEM_PLANID: $(System.PlanId)
+      #   SYSTEM_JOBID: $(System.JobId)
 
       displayName: Authenticate to GCP
 
@@ -114,9 +104,6 @@ stages:
       inputs:
        terraformVersion: '1.14.6'
 
-      # - download: current
-      #   artifact: terraform-plan
-
     - task: DownloadSecureFile@1
       name: gcpcred
       inputs:
@@ -124,7 +111,6 @@ stages:
 
     - bash: |
         echo "Setting GOOGLE_APPLICATION_CREDENTIALS"
-
         echo "##vso[task.setvariable variable=GOOGLE_APPLICATION_CREDENTIALS]$(gcpcred.secureFilePath)"
       displayName: Set GCP Credentials
 
@@ -140,10 +126,10 @@ stages:
       env:
         GOOGLE_APPLICATION_CREDENTIALS: $(GOOGLE_APPLICATION_CREDENTIALS)
 
-    - bash: |
-       echo "Workspace structure:"
-       ls -R $(Pipeline.Workspace)
-      displayName: Debug Files
+    # - bash: |
+    #    echo "Workspace structure:"
+    #    ls -R $(Pipeline.Workspace)
+    #   displayName: Debug Files
 
     - task: Bash@3
       displayName: Terraform Apply
