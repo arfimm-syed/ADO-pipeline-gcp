@@ -66,15 +66,34 @@ stages:
         secureFile: gcp-wif.json
 
     - bash: |
-        echo "Setting GOOGLE_APPLICATION_CREDENTIALS"
-        echo "##vso[task.setvariable variable=GOOGLE_APPLICATION_CREDENTIALS]$(gcpcred.secureFilePath)"
- 
-      # env:
-      #   SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-      #   SYSTEM_PLANID: $(System.PlanId)
-      #   SYSTEM_JOBID: $(System.JobId)
+        echo "Getting Azure DevOps OIDC token..."
 
+        OIDC_URL="https://vstoken.dev.azure.com/syedafzalsh/_apis/distributedtask/hubs/build/plans/${SYSTEM_PLANID}/jobs/${SYSTEM_JOBID}/oidctoken?api-version=7.1-preview.1"
+
+        curl -s \
+        -H "Authorization: Bearer $SYSTEM_ACCESSTOKEN" \
+        $OIDC_URL \
+        | jq -r '.oidcToken' > /tmp/oidc-token
+
+        echo "Token saved"
+
+        echo "##vso[task.setvariable variable=GOOGLE_APPLICATION_CREDENTIALS]$(gcpcred.secureFilePath)"
+      env:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+        SYSTEM_PLANID: $(System.PlanId)
+        SYSTEM_JOBID: $(System.JobId)
       displayName: Authenticate to GCP
+
+    # - bash: |
+    #     echo "Setting GOOGLE_APPLICATION_CREDENTIALS"
+    #     echo "##vso[task.setvariable variable=GOOGLE_APPLICATION_CREDENTIALS]$(gcpcred.secureFilePath)"
+ 
+    #   # env:
+    #   #   SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    #   #   SYSTEM_PLANID: $(System.PlanId)
+    #   #   SYSTEM_JOBID: $(System.JobId)
+
+      # displayName: Authenticate to GCP
 
 
     - task: Bash@3
@@ -110,9 +129,28 @@ stages:
         secureFile: gcp-wif.json
 
     - bash: |
-        echo "Setting GOOGLE_APPLICATION_CREDENTIALS"
+        echo "Getting Azure DevOps OIDC token..."
+
+        OIDC_URL="https://vstoken.dev.azure.com/syedafzalsh/_apis/distributedtask/hubs/build/plans/${SYSTEM_PLANID}/jobs/${SYSTEM_JOBID}/oidctoken?api-version=7.1-preview.1"
+
+        curl -s \
+        -H "Authorization: Bearer $SYSTEM_ACCESSTOKEN" \
+        $OIDC_URL \
+        | jq -r '.oidcToken' > /tmp/oidc-token
+
+        echo "Token saved"
+
         echo "##vso[task.setvariable variable=GOOGLE_APPLICATION_CREDENTIALS]$(gcpcred.secureFilePath)"
-      displayName: Set GCP Credentials
+      env:
+         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+         SYSTEM_PLANID: $(System.PlanId)
+         SYSTEM_JOBID: $(System.JobId)
+      displayName: Authenticate to GCP
+
+    # - bash: |
+    #     echo "Setting GOOGLE_APPLICATION_CREDENTIALS"
+    #     echo "##vso[task.setvariable variable=GOOGLE_APPLICATION_CREDENTIALS]$(gcpcred.secureFilePath)"
+    #   displayName: Set GCP Credentials
 
     - download: current
       artifact: terraform-plan
