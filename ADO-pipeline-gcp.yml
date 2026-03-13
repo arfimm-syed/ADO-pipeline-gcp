@@ -83,9 +83,9 @@ stages:
       env:
          GOOGLE_APPLICATION_CREDENTIALS: $(GOOGLE_APPLICATION_CREDENTIALS)
 
-  - stage: Apply
-    dependsOn: Plan
-    jobs:
+- stage: Apply
+  dependsOn: Plan
+  jobs:
     - job: Apply
       steps:
 
